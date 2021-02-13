@@ -1,7 +1,7 @@
 require('./bootstrap');
 window.Vue = require('vue');
 
-Vue.component('CategoriesIndex', require('./components/categories/index').default);
+Vue.component('Categories', require('./components/categories').default);
 
 const app = new Vue({
     el: '#app',

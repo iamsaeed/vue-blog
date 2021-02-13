@@ -1,0 +1,23 @@
+1. Category -a (make all)
+2. Add columns to category tables
+3. rum migration
+4. make an api for getting all data
+5. make an api for storing data
+
+6. in components folder make a Categories.vue file as per the stub
+7 register the component in resources/app.js
+8. make a blade file and register a route for it
+9. call the categories component
+10. declare categories array: categories : [] (in data object)
+11. create a method to fetch categories, and assign response to categories array
+12. in created hook, call method in point 11
+11. display data on the page
+
+12. make a form in a wrapper div
+13. create a flag to show/hide this div on a click
+14. form fields will be name and description
+15. define a category object in data hook with key name & description
+16. bind form fields with data variable using v-model
+17. make a post method to submit add category request
+18. on success response, rest the category object to default status
+19. on success get fresh data of categories

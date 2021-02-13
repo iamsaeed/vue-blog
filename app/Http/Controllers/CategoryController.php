@@ -40,11 +40,18 @@ class CategoryController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
-        //
+        $category = new Category;
+        $category->name = $request->input('name');
+        $category->description = $request->input('description');
+        $category->save();
+
+        return response()->json([
+            'category' => $category
+        ], 200);
     }
 
     /**
