@@ -1961,51 +1961,133 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      search: {
+        name: '',
+        description: ''
+      },
       category: {
         name: '',
         description: ''
       },
       categories: [],
-      showCreateForm: false
+      showCreateForm: false,
+      errors: '',
+      success: '',
+      loader: false,
+      isEditable: false
     };
   },
   created: function created() {
     this.getCategories();
   },
   methods: {
+    reset: function reset() {
+      this.search = {
+        name: '',
+        description: ''
+      };
+      this.getCategories();
+    },
+    searchOnClick: function searchOnClick(key, value) {
+      if (key === 'name') {
+        this.search.name = value;
+      }
+
+      if (key === 'description') {
+        this.search.description = value;
+      }
+
+      this.getCategories();
+    },
     getCategories: function getCategories() {
       var _this = this;
 
       axios({
         method: 'get',
-        url: '/api/categories-get'
+        url: '/api/categories-get?' + 'name=' + _this.search.name + '&description=' + _this.search.description
       }).then(function (response) {
         _this.categories = response.data.categories;
       })["catch"](function (error) {
         console.log(error);
       });
     },
+    editCategory: function editCategory(category) {
+      this.isEditable = true;
+      this.category = category;
+      this.showCreateForm = true;
+    },
     addCategory: function addCategory() {
       // adding category
       var _this = this;
 
+      _this.loader = true;
       axios({
         method: 'post',
         url: '/api/categories-store',
         data: _this.category
       }).then(function (response) {
+        _this.success = response.data.message;
         _this.category = {
           name: '',
           description: ''
         };
 
         _this.getCategories();
+
+        _this.showCreateForm = false;
+        _this.loader = false;
       })["catch"](function (error) {
-        console.log(error);
+        _this.errors = error.response.data.errors;
+        _this.loader = false;
       });
+    },
+    deleteCategory: function deleteCategory(id) {
+      // adding category
+      if (confirm('Are you sure?')) {
+        var _this = this;
+
+        _this.loader = true;
+        axios({
+          method: 'post',
+          url: '/api/categories-delete',
+          data: {
+            id: id
+          }
+        }).then(function (response) {
+          _this.success = response.data.message;
+
+          _this.getCategories();
+
+          _this.loader = false;
+        })["catch"](function (error) {
+          _this.errors = error.response.data.errors;
+          _this.loader = false;
+        });
+      }
     }
   }
 });
@@ -6466,7 +6548,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/*css*/\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/*css*/\n", ""]);
 
 // exports
 
@@ -38304,7 +38386,13 @@ var render = function() {
                           _vm.$set(_vm.category, "name", $event.target.value)
                         }
                       }
-                    })
+                    }),
+                    _vm._v(" "),
+                    _vm.errors
+                      ? _c("span", { staticClass: "text-danger" }, [
+                          _vm._v(_vm._s(_vm.errors.name[0]))
+                        ])
+                      : _vm._e()
                   ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "form-group" }, [
@@ -38333,17 +38421,40 @@ var render = function() {
                           )
                         }
                       }
-                    })
+                    }),
+                    _vm._v(" "),
+                    _vm.errors
+                      ? _c("span", { staticClass: "text-danger" }, [
+                          _vm._v(_vm._s(_vm.errors.description[0]))
+                        ])
+                      : _vm._e()
                   ]),
                   _vm._v(" "),
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-primary",
-                      attrs: { type: "submit" }
-                    },
-                    [_vm._v("Submit")]
-                  )
+                  !_vm.loader
+                    ? _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-primary",
+                          attrs: { type: "submit" }
+                        },
+                        [_vm._v("Submit")]
+                      )
+                    : _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-primary",
+                          attrs: { type: "button", disabled: "" }
+                        },
+                        [
+                          _c("div", {
+                            staticClass: "spinner-border spinner-border-sm",
+                            attrs: { role: "status" }
+                          }),
+                          _vm._v(
+                            "\n                        Saving...\n                    "
+                          )
+                        ]
+                      )
                 ]
               )
             ])
@@ -38364,6 +38475,93 @@ var render = function() {
           )
         ]),
         _vm._v(" "),
+        _vm.success
+          ? _c("span", { staticClass: "text-success" }, [
+              _vm._v(_vm._s(_vm.success))
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _c(
+          "form",
+          {
+            staticClass: "form-inline",
+            on: {
+              submit: function($event) {
+                $event.preventDefault()
+                return _vm.getCategories($event)
+              }
+            }
+          },
+          [
+            _c("div", { staticClass: "form-group mx-sm-3 mb-2" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.search.name,
+                    expression: "search.name"
+                  }
+                ],
+                staticClass: "form-control form-control-sm",
+                attrs: { type: "text", placeholder: "Name" },
+                domProps: { value: _vm.search.name },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.search, "name", $event.target.value)
+                  }
+                }
+              })
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-group mx-sm-3 mb-2" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.search.description,
+                    expression: "search.description"
+                  }
+                ],
+                staticClass: "form-control form-control-sm",
+                attrs: { type: "text", placeholder: "Description" },
+                domProps: { value: _vm.search.description },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.search, "description", $event.target.value)
+                  }
+                }
+              })
+            ]),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-sm btn-primary mb-2",
+                attrs: { type: "submit" }
+              },
+              [_vm._v("Filter")]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-sm btn-danger mb-2",
+                attrs: { type: "button" },
+                on: { click: _vm.reset }
+              },
+              [_vm._v("Reset")]
+            )
+          ]
+        ),
+        _vm._v(" "),
         _c("table", { staticClass: "table table-borderless table-striped" }, [
           _vm._m(0),
           _vm._v(" "),
@@ -38373,11 +38571,64 @@ var render = function() {
               return _c("tr", [
                 _c("td", [_vm._v(_vm._s(category.id))]),
                 _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(category.name))]),
+                _c("td", [
+                  _c(
+                    "span",
+                    {
+                      on: {
+                        dblclick: function($event) {
+                          return _vm.searchOnClick("name", category.name)
+                        }
+                      }
+                    },
+                    [_vm._v(_vm._s(category.name))]
+                  )
+                ]),
                 _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(category.description))]),
+                _c("td", [
+                  _c(
+                    "span",
+                    {
+                      on: {
+                        dblclick: function($event) {
+                          return _vm.searchOnClick(
+                            "description",
+                            category.description
+                          )
+                        }
+                      }
+                    },
+                    [_vm._v(_vm._s(category.description))]
+                  )
+                ]),
                 _vm._v(" "),
-                _vm._m(1, true)
+                _c("td", [
+                  _c(
+                    "a",
+                    {
+                      staticClass: "btn btn-sm btn-warning",
+                      on: {
+                        click: function($event) {
+                          return _vm.editCategory(category)
+                        }
+                      }
+                    },
+                    [_vm._v("Edit")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "a",
+                    {
+                      staticClass: "btn btn-sm btn-danger",
+                      on: {
+                        click: function($event) {
+                          return _vm.deleteCategory(category.id)
+                        }
+                      }
+                    },
+                    [_vm._v("Delete")]
+                  )
+                ])
               ])
             }),
             0
@@ -38404,18 +38655,6 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Action")])
       ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", [
-      _c("a", { staticClass: "btn btn-sm btn-primary" }, [_vm._v("View")]),
-      _vm._v(" "),
-      _c("a", { staticClass: "btn btn-sm btn-warning" }, [_vm._v("Edit")]),
-      _vm._v(" "),
-      _c("a", { staticClass: "btn btn-sm btn-danger" }, [_vm._v("Delete")])
     ])
   }
 ]
@@ -50754,8 +50993,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/ahmad/www/videos/vue-blog/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /home/ahmad/www/videos/vue-blog/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\xampp\htdocs\videos\vue-blog\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\xampp\htdocs\videos\vue-blog\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

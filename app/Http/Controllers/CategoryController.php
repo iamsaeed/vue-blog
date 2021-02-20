@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Category;
+use App\Traits\Search;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
+    use Search;
     /**
      * Display a listing of the resource.
      *
@@ -17,9 +20,14 @@ class CategoryController extends Controller
         return view('categories.index');
     }
 
-    public function get()
+    public function get(Request $request)
     {
-        $categories = Category::all();
+        $name = $request->input('name') ?: '';
+        $description = $request->input('description') ?: '';
+
+        $categories = Category::search('name', $name)
+            ->search('description', $description)
+            ->get();
 
         return response()->json([
             'categories' => $categories
@@ -44,13 +52,34 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $category = new Category;
-        $category->name = $request->input('name');
-        $category->description = $request->input('description');
-        $category->save();
+        if(!$request->input('id'))
+        {
+            $request->validate([
+                'name' => 'required|unique:categories,name',
+                'description' => 'required',
+
+            ]);
+
+            $message = 'Category added!';
+        } else {
+            $request->validate([
+                'name' => 'required|unique:categories,name,'.$request->input('id'),
+                'description' => 'required',
+
+            ]);
+            $message = 'Category updated!';
+        }
+
+        $category = Category::updateOrCreate(
+            ['id' => $request->input('id')],
+            [
+                'name' => $request->input('name'),
+                'description' => $request->input('description'),
+            ]);
 
         return response()->json([
-            'category' => $category
+            'category' => $category,
+            'message' => $message
         ], 200);
     }
 
@@ -92,10 +121,15 @@ class CategoryController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Category  $category
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(Category $category)
+    public function destroy(Request $request)
     {
-        //
+        $category = Category::find($request->input('id'));
+        $category->delete();
+
+        return response()->json([
+            'message' => 'Category deleted!'
+        ], 200);
     }
 }

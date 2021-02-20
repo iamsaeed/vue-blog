@@ -20,3 +20,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::get('categories-get', 'CategoryController@get');
 Route::post('categories-store', 'CategoryController@store');
+Route::post('categories-delete', 'CategoryController@destroy');
