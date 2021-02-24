@@ -1,0 +1,12 @@
+Steps to create a component:
+
+1. create a SFC (Single File Component) (*.vue)
+2. Write your code
+3. Component will accept props from parent component (where this component is being used)
+4. To share data from Child / this component with parent component use this.$emit(eventName, data), second param is optional
+5. To use a child component, import it locally / globally, register in the components object in script section
+6. The emit custom event is called on the child component tag in the parent component, and can use and of its methods
+
+
+
+

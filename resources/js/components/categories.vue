@@ -4,24 +4,7 @@
             <div class="col-2"></div>
             <div class="col-8">
                 <div v-if="showCreateForm">
-                    <h1>Add Category</h1>
-                    <form @submit.prevent="addCategory">
-                        <div class="form-group">
-                            <label>Name</label>
-                            <input type="text" v-model="category.name" class="form-control">
-                            <span class="text-danger" v-if="errors">{{errors.name[0]}}</span>
-                        </div>
-                        <div class="form-group">
-                            <label>Description</label>
-                            <textarea class="form-control"  v-model="category.description"></textarea>
-                            <span class="text-danger" v-if="errors">{{errors.description[0]}}</span>
-                        </div>
-                        <button type="submit" class="btn btn-primary" v-if="!loader">Submit</button>
-                        <button type="button" class="btn btn-primary" disabled v-else>
-                            <div class="spinner-border spinner-border-sm" role="status"></div>
-                            Saving...
-                        </button>
-                    </form>
+                    <category-create @refresh="getCategories" :isEditable="isEditable" :editCategory="category"></category-create>
                 </div>
                 <h1>
                     Category Page
@@ -39,7 +22,7 @@
                     <button type="submit" class="btn btn-sm btn-primary mb-2">Filter</button>
                     <button type="button" @click="reset" class="btn btn-sm btn-danger mb-2">Reset</button>
                 </form>
-
+                <pagination :paginationData="categories" @paginate="paginate"> </pagination>
                 <table class="table table-borderless table-striped">
                     <thead>
                     <tr>
@@ -50,8 +33,8 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="category in categories">
-                        <td>{{category.id}}</td>
+                    <tr v-for="(category, index) in categories.data">
+                        <td>{{categories.from + index}}</td>
                         <td>
                             <span @dblclick="searchOnClick('name', category.name)">{{category.name}}</span>
                         </td>
@@ -65,37 +48,45 @@
                     </tr>
                     </tbody>
                 </table>
+                <pagination :paginationData="categories" @paginate="paginate"> </pagination>
             </div>
             <div class="col-2"></div>
-
         </div>
     </div>
 </template>
 
 <script>
+import pagination from "./pagination";
+import categoryCreate from '../components/category-create'
 export default {
+    components : { categoryCreate, pagination },
     data(){
         return {
             search : {
                 name : '',
                 description : ''
             },
-            category : {
-                name: '',
-                description : ''
-            },
+
             categories : [],
             showCreateForm : false,
             errors : '',
             success : '',
             loader : false,
-            isEditable : false
+            isEditable : false,
+            category : {
+                name: '',
+                description : ''
+            }
         }
     },
     created(){
         this.getCategories();
     },
     methods : {
+        paginate(current_page){
+            this.categories.current_page = current_page;
+            this.getCategories();
+        },
         reset(){
             this.search = {
                 name : '',
@@ -116,8 +107,8 @@ export default {
             let _this = this;
             axios({
                 method: 'get',
-                url: '/api/categories-get?'
-                    +'name='+_this.search.name
+                url: '/api/categories-get?page=' + this.categories.current_page
+                    +'&name='+_this.search.name
                     +'&description='+_this.search.description
             }).then(function (response) {
                 _this.categories = response.data.categories
@@ -130,28 +121,7 @@ export default {
             this.category = category
             this.showCreateForm = true;
         },
-        addCategory(){
-            // adding category
-            let _this = this;
-            _this.loader = true;
-            axios({
-                method: 'post',
-                url: '/api/categories-store',
-                data : _this.category
-            }).then(function (response) {
-                _this.success = response.data.message;
-                _this.category = {
-                    name: '',
-                    description : ''
-                }
-                _this.getCategories();
-                _this.showCreateForm=false;
-                _this.loader = false;
-            }).catch(function (error) {
-                _this.errors = error.response.data.errors;
-                _this.loader = false;
-            });
-        },
+
         deleteCategory(id){
             // adding category
           if(confirm('Are you sure?')){

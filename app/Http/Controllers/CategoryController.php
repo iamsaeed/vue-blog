@@ -27,7 +27,8 @@ class CategoryController extends Controller
 
         $categories = Category::search('name', $name)
             ->search('description', $description)
-            ->get();
+            ->orderBy('id', 'desc')
+            ->paginate(10);
 
         return response()->json([
             'categories' => $categories
