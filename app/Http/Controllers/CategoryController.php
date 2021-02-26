@@ -10,11 +10,12 @@ use Illuminate\Http\Request;
 class CategoryController extends Controller
 {
     use Search;
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
+    public function computed()
+    {
+        return view('computed');
+    }
+
     public function index()
     {
         return view('categories.index');

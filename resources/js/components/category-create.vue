@@ -1,5 +1,8 @@
 <template>
     <div>
+        <messages :messages="success" @hideMessage="success = ''" className="alert-success"></messages>
+        <messages :messages="error" @hideMessage="error = ''" className="alert-danger"></messages>
+
         <h1>{{isEditable ? 'Edit Category' : 'Add Category'}}</h1>
         <form @submit.prevent="addCategory">
             <div class="form-group">
@@ -26,11 +29,13 @@ export default {
     props : [ 'editCategory', 'isEditable' ],
     data(){
         return {
+            success : '',
             category : {
                 name: '',
                 description : ''
             },
             errors : '',
+            error : '',
             loader : false,
         }
     },
@@ -61,6 +66,7 @@ export default {
                 _this.loader = false;
             }).catch(function (error) {
                 _this.errors = error.response.data.errors;
+                _this.error = error.response.data.message;
                 _this.loader = false;
             });
         },

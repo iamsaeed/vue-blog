@@ -1,5 +1,6 @@
 <template>
     <div>
+        <messages :messages="success" @hideMessage="success = ''" className="alert-warning"></messages>
         <div class="row">
             <div class="col-2"></div>
             <div class="col-8">
@@ -10,7 +11,6 @@
                     Category Page
                     <small @click="showCreateForm = !showCreateForm">+</small>
                 </h1>
-                <span class="text-success" v-if="success">{{success}}</span>
 
                 <form class="form-inline" @submit.prevent="getCategories">
                     <div class="form-group mx-sm-3 mb-2">
@@ -43,7 +43,7 @@
                         </td>
                         <td>
                             <a class="btn btn-sm btn-warning" @click="editCategory(category)">Edit</a>
-                            <a class="btn btn-sm btn-danger" @click="deleteCategory(category.id)">Delete</a>
+                            <a class="btn btn-sm btn-danger" @click="confirmDelete(category.id)">Delete</a>
                         </td>
                     </tr>
                     </tbody>
@@ -52,6 +52,7 @@
             </div>
             <div class="col-2"></div>
         </div>
+        <confirmation-box v-if="showDeleteConfirmation" show="true" @confirmDelete="deleteItem"></confirmation-box>
     </div>
 </template>
 
@@ -66,7 +67,7 @@ export default {
                 name : '',
                 description : ''
             },
-
+            showDeleteConfirmation : false,
             categories : [],
             showCreateForm : false,
             errors : '',
@@ -76,13 +77,25 @@ export default {
             category : {
                 name: '',
                 description : ''
-            }
+            },
+            category_id : ''
         }
+    },
+    computed : {
+
     },
     created(){
         this.getCategories();
     },
     methods : {
+        deleteItem(){
+            this.deleteCategory(this.category_id);
+            this.showDeleteConfirmation = false;
+        },
+        confirmDelete(category_id){
+            this.showDeleteConfirmation = true;
+            this.category_id = category_id;
+        },
         paginate(current_page){
             this.categories.current_page = current_page;
             this.getCategories();
@@ -124,7 +137,6 @@ export default {
 
         deleteCategory(id){
             // adding category
-          if(confirm('Are you sure?')){
               let _this = this;
               _this.loader = true;
               axios({
@@ -139,7 +151,6 @@ export default {
                   _this.errors = error.response.data.errors;
                   _this.loader = false;
               });
-          }
         }
     }
 
@@ -149,6 +160,6 @@ export default {
 
 
 <style>
-/*css*/
+
 </style>
 
