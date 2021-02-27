@@ -2,6 +2,7 @@ require('./bootstrap');
 window.Vue = require('vue');
 
 Vue.component('Categories', require('./components/categories').default);
+Vue.component('BlogIndex', require('./components/blogs/index').default);
 Vue.component('Computed', require('./components/Computed').default);
 Vue.component('ConfirmationBox', require('./components/Confirmation').default);
 Vue.component('Messages', require('./components/Messages').default);

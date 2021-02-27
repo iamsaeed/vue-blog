@@ -18,6 +18,11 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::post('get-all-active', 'Controller@getAllActive');
+
 Route::get('categories-get', 'CategoryController@get');
 Route::post('categories-store', 'CategoryController@store');
 Route::post('categories-delete', 'CategoryController@destroy');
+
+Route::get('blogs-get', 'BlogController@get');
+Route::post('blogs-store', 'BlogController@store');

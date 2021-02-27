@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Blog;
+use App\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class BlogController extends Controller
 {
@@ -14,7 +16,14 @@ class BlogController extends Controller
      */
     public function index()
     {
-        //
+        return view('blogs.index');
+    }
+
+    public function get(Request $request)
+    {
+        $blogs = Blog::with(['category', 'tags'])->get();
+
+        return response()->json(['blogs' => $blogs, 'message' => null], 200);
     }
 
     /**
@@ -31,11 +40,51 @@ class BlogController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
-        //
+        if(!$request->input('id'))
+        {
+            $request->validate([
+                'name' => 'required|unique:blogs,name',
+                'slug' => 'required',
+                'description' => 'required',
+                'category_id' => 'required',
+
+            ]);
+
+            $message = 'Blog added!';
+        } else {
+            $request->validate([
+                'name' => 'required|unique:blogs,name,'.$request->input('id'),
+                'slug' => 'required',
+                'description' => 'required',
+                'category_id' => 'required',
+
+            ]);
+            $message = 'Blog updated!';
+        }
+
+        DB::beginTransaction();
+
+        $blog = Blog::updateOrCreate(
+            ['id' => $request->input('id')],
+            [
+                'name' => $request->input('name'),
+                'slug' => $request->input('slug'),
+                'category_id' => $request->input('category_id'),
+                'description' => $request->input('description'),
+            ]);
+
+        if($request->tags) $blog->tags()->sync($request->tags);
+
+        DB::commit();
+
+        return response()->json([
+            'blog' => $blog,
+            'message' => $message
+        ], 200);
     }
 
     /**

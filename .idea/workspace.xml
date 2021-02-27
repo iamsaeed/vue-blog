@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="e0943875-9ea6-4503-b221-bbde73ab233a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/resources/js/components/Computed.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/js/components/Confirmation.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/js/components/Messages.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/views/computed.blade.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database/migrations/2021_02_27_071005_create_blog_tag_table.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/js/components/blogs/index.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/views/blogs/index.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/CategoryController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/CategoryController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Blog.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Blog.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Category.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Category.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/BlogController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/BlogController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Controller.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Controller.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Tag.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Tag.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/app.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/categories.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/categories.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/category-create.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/category-create.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/layouts/app.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/layouts/app.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/api.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/web.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -152,12 +156,14 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/resources/views/categories" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/resources/js/components" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\xampp\htdocs\videos\vue-blog\resources\js\components" />
+      <recent name="C:\xampp\htdocs\videos\vue-blog\resources\views\blogs" />
       <recent name="C:\xampp\htdocs\videos\vue-blog\resources\views\categories" />
       <recent name="C:\xampp\htdocs\videos\vue-blog\app\Traits" />
     </key>
@@ -183,7 +189,8 @@
       <workItem from="1613849632809" duration="732000" />
       <workItem from="1614179885450" duration="5940000" />
       <workItem from="1614327808790" duration="404000" />
-      <workItem from="1614352424717" duration="5878000" />
+      <workItem from="1614352424717" duration="6575000" />
+      <workItem from="1614406184244" duration="5449000" />
     </task>
     <servers />
   </component>

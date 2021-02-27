@@ -22,5 +22,6 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('categories', 'CategoryController@index')->name('categories.index');
+Route::get('blogs', 'BlogController@index')->name('blogs.index');
 
 Route::get('computed', 'CategoryController@computed')->name('categories.computed');
